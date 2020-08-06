@@ -1,0 +1,39 @@
+
+        <div class="card-header">
+          <div class="card-title">
+            <h2>{{title}}<a title="" data-tooltip="top" class="help-trigger"><i class="ty-icon ty-icon-help-o"></i></a>
+            </h2>
+            <h3>{{subtitle}}</h3>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="table-wrapper">
+            <table class="table table-departments">
+              <thead>
+                <tr>
+                  {{#header}}
+                    <th class="job-title">{{value}}</th>
+                  {{/header}}
+                </tr>
+              </thead>
+              <tbody id="{{matrixType}}-matrix">
+                {{#data}}
+                <tr>
+                    {{#rowData}}
+                        <td class={{highlight}} id={{cellId}}>{{value}}</td>
+                    {{/rowData}}
+                </tr>
+                {{/data}}
+              </tbody>
+              <tfoot>
+                <tr>
+                {{#footer}}
+                    <td class={{highlight}}>{{value}}</td>
+                {{/footer}}
+                  
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>

@@ -1,0 +1,49 @@
+
+  <div class="card-header">
+    <div class="card-title">
+      <h2>Topic breakdown<a class="help-trigger" title="Here's what your employees are saying about your company grouped by topic." data-tooltip="top"><i class="ty-icon ty-icon-help-o"></i></a></h2>
+      <h3>Mentions by category</h3>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="table-wrapper">
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="item-title">Category</th>
+            <th>Performance</th>
+            <th>Mentions</th>
+            <th>Positive</th>
+            <th>Negative</th>
+          </tr>
+        </thead>
+        <tbody id="topic-breakdown">
+          {{#categories}}
+
+          <tr class="lvl-0 is-expanded">
+            <td class="item-title" id={{category}}>{{#hasChildren}}<a class="toggle-expand"><i class="ty-icon ty-icon-caret-down"></i></a>{{/hasChildren}}{{label}}</td>
+            <td><span class="trend text-{{trendTextSentiment}}"><i class="ty-icon ty-icon-arrow-{{trendArrowType}}"></i></span><span class="text-{{trendTextSentiment}}">{{currentPerformance}}</span></td>
+            <td class="l-align-left">
+              <div class="bar-chart"><span class="value value-pos" style="width: {{posPerMentions}}%"></span><span class="value value-neg" style="width: {{negPerMentions}}%"></span></div> {{totalOpinions}}
+            </td>
+            <td>{{positiveOpinions}}</td>
+            <td>{{negativeOpinions}}</td>
+          </tr>
+          {{#subCategories}}
+          <tr class="lvl-1 lvl-1-1 is-expanded {{#isLastSubcategory}}is-last{{/isLastSubcategory}}">
+            <td class="item-title" id={{category}}>{{label}}</td>
+            <td><span class="trend {{trendTextSentiment}}"><i class="ty-icon ty-icon-arrow-{{trendArrowType}}"></i></span><span class="text-{{trendTextSentiment}}">{{currentPerformance}}</span></td>
+            <td class="l-align-left">
+              <div class="bar-chart"><span class="value value-pos" style="width: {{posPerMentions}}%"></span><span class="value value-neg" style="width: {{negPerMentions}}%"></span></div> {{totalOpinions}}
+            </td>
+            <td>{{positiveOpinions}}</td>
+            <td>{{negativeOpinions}}</td>
+          </tr>
+          {{/subCategories}}
+          {{/categories}}
+          
+        </tbody>
+      </table>
+    </div>
+    
+  </div>

@@ -1,0 +1,37 @@
+
+  <div class="card-header">
+    <div class="card-title">
+      <h2>Strengths<a class="help-trigger" title="Use the topics below to market yourself and atrract new employees." data-tooltip="top"><i class="ty-icon ty-icon-help-o"></i></a></h2>
+      <h3>Leverage these to attract talent</h3>
+    </div>
+  </div>
+  <div class="card-body" id="top-strengths">
+    {{#data}}
+    <section>
+      <h3>{{label}}</h3>
+      <div class="score">
+        <p class="score-value" id={{category}}><span class="text-positive">{{currentPerformance}}</span> / 5</p>
+        <p class="score-trend text-{{trendTextSentiment}}"><i class="ty-icon ty-icon-arrow-{{trendArrowType}}"></i> Trend</p>
+        <p class="score-status"><strong>{{avgCompPercent}}%</strong> {{avgCompStatus}} avg.</p>
+      </div>
+      <div class="job-titles">
+        <h4>Most reviews from:</h4>
+        <ul>
+	  {{#jobs}}
+          <li><i class="ty-icon ty-icon-user"></i>
+            <p><span class="job-title">{{job_name}}</span><span class="count">{{nr_reviews}} reviews</span></p>
+          </li>
+	  {{/jobs}}
+        </ul>
+      </div>
+      <div class="mentions">
+        <h4>What people are saying:</h4>
+        <ul>
+	  {{#snippets}}
+          <li><i class="ty-icon ty-icon-check text-positive"></i><span>{{categoryName}}</span><span class="snippet">&ldquo;{{snippet.text}}&rdquo;</span></li>
+	  {{/snippets}}
+        </ul>
+      </div>
+    </section>
+    {{/data}}
+  </div>

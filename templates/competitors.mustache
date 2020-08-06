@@ -1,0 +1,31 @@
+
+  <div class="card-header is-mocked">
+    <div class="card-title">
+      <h2>Competitors comparison<a class="help-trigger" title="Compare your category data with the data of the competitors" data-tooltip="top"><i class="ty-icon ty-icon-help-o"></i></a></h2>
+      <h3>Benchmark against competitors on the hiring market</h3>
+    </div>
+  </div>
+  <div class="card-body is-mocked">
+    <div class="table-wrapper">
+      <table class="table table-company">
+        <thead>
+          <tr>
+            <th>Companies</th>
+	    {{#mainCategoriesLabels}}
+            <th>{{.}}</th>
+	    {{/mainCategoriesLabels}}
+          </tr>
+        </thead>
+        <tbody>
+	  {{#data}}
+          <tr>
+            <td class="{{name_highlight}}">{{name}}</td>
+	    {{#mainCategories}}
+            <td class="text" data-tooltip="top">{{#cleanScore}}{{.}}{{/cleanScore}}</td>
+	    {{/mainCategories}}
+          </tr>
+	  {{/data}}
+        </tbody>
+      </table>
+    </div>
+  </div>

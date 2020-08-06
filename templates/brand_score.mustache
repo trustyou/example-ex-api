@@ -1,0 +1,44 @@
+{{^noData}}
+  <div class="card-header">
+    <div class="card-title">
+      <h2>Brand Score&trade;<a class="help-trigger" title="Overall performance score based on {{totalReviews}} reviews across the web." data-tooltip="top"><i class="ty-icon ty-icon-help-o"></i></a></h2>
+      <h3>Based on {{totalReviews}} reviews</h3>
+    </div>
+  </div>
+  <div class="card-body">
+    {{#isPositive}}
+    <h4 class="text-positive">You're doing great!</h4>
+    {{/isPositive}}
+    <div class="score">
+      <p class="score-value"><span class="text-{{#isPositive}}positive{{/isPositive}}{{^isPositive}}negative{{/isPositive}}">{{score}}</span> / 5</p>
+    </div>
+    <div class="sources">
+      <div class="source"><img src="../img/icon-indeed.png" alt="Indeed">
+        <p class="name">Indeed</p>
+        <p class="count">{{indeedReviews}} reviews</p>
+      </div>
+      <div class="source"><img src="../img/icon-glassdoor.png" alt="Glassdoor">
+        <p class="name">Glassdoor</p>
+        <p class="count">{{glassdoorReviews}} reviews</p>
+      </div>
+    </div><a class="btn" href="#card-weaknesses" data-action="scroll">Show areas of improvement</a>
+  </div>
+
+{{/noData}}
+
+{{#noData}}
+  <div class="card-header">
+    <div class="card-title">
+      <h2>Brand Score&trade;<a class="help-trigger" title="Overall performance score based on reviews across the web." data-tooltip="top"><i class="ty-icon ty-icon-help-o"></i></a></h2>
+      <h3>Not enough data to generate brand score</h3>
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="score">
+      <p class="score-value"><span class="text-negative">-</span></p>
+    </div>
+    <div class="sources">
+
+    </div><a class="btn" href="#card-weaknesses" data-action="scroll">Show areas of improvement</a>
+  </div>
+{{/noData}}
