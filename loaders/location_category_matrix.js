@@ -7,20 +7,40 @@ export default function loadLocationCategoryMatrix (companyId, companyName) {
       getLocationData(companyId).then(viewModel => {
         const rendered = Mustache.render(template, viewModel)
         document.getElementById('card-location-matrix').innerHTML = rendered
-        initializeHighlightsTooltips(viewModel)
+        enableDrillDown(viewModel)
       })
     })
 }
 
-function initializeHighlightsTooltips (viewModel) {
+function enableDrillDown (viewModel) {
+  /* The drilldown functionality adds tooltips to score elements and
+   * on click generates a serach event that will show the reviews
+   * that contributed to that particular score
+   * */
   viewModel.data.forEach(row => {
     row.rowData.forEach(cell => {
+      // Skip the first cell (the cateogry cell)
       if (cell.cellId.indexOf('category') !== -1) {
         return
       }
 
-      $(`#location-matrix #${cell.cellId}`).tooltipsy({
-        content: `Show all mentions for category "${cell.category}" and location "${cell.location}"`,
+      const elem = $(`#location-matrix #${cell.cellId}`)
+      elem.on('click', () => {
+        // Generate the search event
+        document.dispatchEvent(
+          new CustomEvent('searchEvent', {
+            detail: {
+              categories: [cell.category],
+              location: cell.location
+            }
+          })
+        )
+        // Scroll to the search component
+        document.querySelectorAll('.card.card-search-control')[0].scrollIntoView()
+      })
+      // Show tooltip on hover
+      elem.tooltipsy({
+        content: `Show all mentions for category "${cell.categoryLabel}" and location "${cell.location}"`,
         className: 'trustyou-ui tooltip top'
       })
     })
@@ -56,16 +76,17 @@ function loadMatrix (companyId, topLocations) {
 
       const segments = result.segments
       for (let i = 0; i < mainCategories.length; i++) {
-        const categoryName = getCategoryLabel(mainCategories[i])
+        const category = mainCategories[i]
+        const categoryLabel = getCategoryLabel(category)
         viewModel.data[i].rowData[0] = {
-          value: categoryName,
+          value: categoryLabel,
           highlight: '',
           cellId: `category-${i}`
         }
         for (let j = 0; j < topLocations.length; j++) {
           const locationName = topLocations[j]
           const locationCategorySegment = segments.filter(segment => {
-            return segment.segment_key.category[0] === mainCategories[i] &&
+            return segment.segment_key.category[0] === category &&
               segment.segment_key.location === locationName
           })
           if (locationCategorySegment.length === 1) {
@@ -73,7 +94,8 @@ function loadMatrix (companyId, topLocations) {
               value: locationCategorySegment[0].data.score,
               highlight: getHighlightForScore(locationCategorySegment[0].data.score),
               cellId: `data-${i}-${j}`,
-              category: categoryName,
+              categoryLabel: categoryLabel,
+              category: category,
               location: locationName
             }
           } else {
@@ -81,7 +103,8 @@ function loadMatrix (companyId, topLocations) {
               value: 'N/A',
               highlight: '',
               cellId: `data-${i}-${j}`,
-              category: categoryName,
+              categoryLabel: categoryLabel,
+              category: category,
               location: locationName
             }
           }

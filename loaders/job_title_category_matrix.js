@@ -7,20 +7,40 @@ export default function loadJobTitleCategoryMatrix (companyId, companyName) {
       getJobData(companyId).then(viewModel => {
         const rendered = Mustache.render(template, viewModel)
         document.getElementById('card-job-title-matrix').innerHTML = rendered
-        initializeHighlightsTooltips(viewModel)
+        enableDrillDown(viewModel)
       })
     })
 }
 
-function initializeHighlightsTooltips (viewModel) {
+function enableDrillDown (viewModel) {
+  /* The drilldown functionality adds tooltips to score elements and
+   * on click generates a serach event that will show the reviews
+   * that contributed to that particular score
+   * */
   viewModel.data.forEach(row => {
     row.rowData.forEach(cell => {
+      // Skip the first cell (the cateogry cell)
       if (cell.cellId.indexOf('category') !== -1) {
         return
       }
 
-      $(`#job-title-matrix #${cell.cellId}`).tooltipsy({
-        content: `Show all mentions for category "${cell.category}" and job title "${cell.job}"`,
+      const elem = $(`#job-title-matrix #${cell.cellId}`)
+      elem.on('click', () => {
+        // Generate the search event
+        document.dispatchEvent(
+          new CustomEvent('searchEvent', {
+            detail: {
+              categories: [cell.category],
+              jobTitle: cell.job
+            }
+          })
+        )
+        // Scroll to the search component
+        document.querySelectorAll('.card.card-search-control')[0].scrollIntoView()
+      })
+      // Show tooltip on hover
+      elem.tooltipsy({
+        content: `Show all mentions for category "${cell.categoryLabel}" and job title "${cell.job}"`,
         className: 'trustyou-ui tooltip top'
       })
     })
@@ -57,16 +77,17 @@ function loadMatrix (companyId, topJobTitles) {
 
       const segments = result.segments
       for (let i = 0; i < mainCategories.length; i++) {
-        const categoryName = getCategoryLabel(mainCategories[i])
+        const category = mainCategories[i]
+        const categoryLabel = getCategoryLabel(category)
         viewModel.data[i].rowData[0] = {
-          value: categoryName,
+          value: categoryLabel,
           highlight: '',
           cellId: `category-${i}`
         }
         for (let j = 0; j < topJobTitles.length; j++) {
           const jobName = topJobTitles[j]
           const jobTitleCategorySegment = segments.filter(segment => {
-            return segment.segment_key.category[0] === mainCategories[i] &&
+            return segment.segment_key.category[0] === category &&
               segment.segment_key.job_title === jobName
           })
           if (jobTitleCategorySegment.length === 1) {
@@ -74,7 +95,8 @@ function loadMatrix (companyId, topJobTitles) {
               value: jobTitleCategorySegment[0].data.score,
               highlight: getHighlightForScore(jobTitleCategorySegment[0].data.score),
               cellId: `data-${i}-${j}`,
-              category: categoryName,
+              categoryLabel: categoryLabel,
+              category: category,
               job: jobName
             }
           } else {
@@ -82,7 +104,8 @@ function loadMatrix (companyId, topJobTitles) {
               value: 'N/A',
               highlight: '',
               cellId: `data-${i}-${j}`,
-              category: categoryName,
+              categoryLabel: categoryLabel,
+              category: category,
               job: jobName
             }
           }

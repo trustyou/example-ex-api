@@ -12,6 +12,7 @@ export default function loadSearchControl (companyId, companyName) {
 
       initializeAccordion()
       initializeSelectizeInputs()
+      initializeEventHandlers()
       search(0)
     })
 
@@ -53,6 +54,11 @@ export default function loadSearchControl (companyId, companyName) {
       filters.category = categories
     }
 
+    const sentiments = $('#select-sentiment').val()
+    if (sentiments) {
+      filters.sentiment = sentiments[0]
+    }
+
     const countries = $('#select-country').val()
     if (countries) {
       filters.country = countries
@@ -65,12 +71,12 @@ export default function loadSearchControl (companyId, companyName) {
 
     const jobTitles = $('#input-job-title').val()
     if (jobTitles) {
-      filters.job_title = jobTitles.split(',')
+      filters.job_title = jobTitles.split(';')
     }
 
-    const sentiments = $('#select-sentiment').val()
-    if (sentiments) {
-      filters.sentiment = sentiments[0]
+    const locations = $('#input-location').val()
+    if (locations) {
+      filters.location = locations.split(';')
     }
 
     return filters
@@ -146,7 +152,86 @@ export default function loadSearchControl (companyId, companyName) {
       create: true
     })
 
+    $('#input-location').selectize({
+      plugins: ['remove_button'],
+      persist: false,
+      createOnBlur: true,
+      create: true
+    })
+
     $('#search-button').click(() => { search(0) })
+  }
+
+  function initializeEventHandlers () {
+    /* Listen to the searchEvent that the other components are dispatching
+     * If an event comes, first change the HTML (so the user can see what's being filtered)
+     * then trigger the search function
+     * */
+    document.addEventListener('searchEvent', (ev) => {
+      // Get custom event data
+      const data = ev.detail
+
+      // Set the query
+      const queryTextElem = $('#free-text-query')
+      if (data.queryText) {
+        queryTextElem.val(data.queryText)
+      } else {
+        queryTextElem.val('')
+      }
+
+      // Set the category
+      const categoryElem = $('#select-category')[0].selectize
+      if (data.categories) {
+        categoryElem.setValue(data.categories)
+      } else {
+        categoryElem.setValue([])
+      }
+
+      // Set the sentiment
+      const sentimentElem = $('#select-sentiment')[0].selectize
+      if (data.sentiment) {
+        sentimentElem.setValue(data.sentiment)
+      } else {
+        sentimentElem.setValue('')
+      }
+
+      // Set the countries
+      const countriesElem = $('#select-country')[0].selectize
+      if (data.countries) {
+        countriesElem.setValue(data.countries)
+      } else {
+        countriesElem.setValue([])
+      }
+
+      // Set the sources
+      const sourcesElem = $('#select-source')[0].selectize
+      if (data.sources) {
+        sourcesElem.setValue(data.sources)
+      } else {
+        sourcesElem.setValue([])
+      }
+
+      // Set the jobs
+      const jobsElem = $('#input-job-title')[0].selectize
+      if (data.jobTitle) {
+        jobsElem.clear(true)
+        jobsElem.createItem(data.jobTitle, false)
+      } else {
+        jobsElem.clear(true)
+      }
+
+      // Set the location
+      const locationElem = $('#input-location')[0].selectize
+      if (data.location) {
+        locationElem.clear(true)
+        locationElem.createItem(data.location, false)
+      } else {
+        locationElem.clear(true)
+      }
+
+      // Trigger the search with page 0 (first page)
+      search(0)
+    })
   }
 }
 

@@ -9,20 +9,56 @@ export default function loadTopicBreakdown (companyId, companyName) {
         const viewModel = getViewModelFromSegments(segments)
         const rendered = Mustache.render(template, viewModel)
         document.getElementById('card-sentiment').innerHTML = rendered
-        initializeHighlightsTooltips(viewModel)
+        enableDrillDown(viewModel)
       })
     })
 }
 
-function initializeHighlightsTooltips (viewModel) {
+function enableDrillDown (viewModel) {
+  /* The drilldown functionality adds tooltips to score elements and
+   * on click generates a serach event that will show the reviews
+   * that contributed to that particular score
+   * */
   viewModel.categories.forEach(category => {
-    $(`#topic-breakdown #${category.category}`).tooltipsy({
+    const categoryElem = $(`#topic-breakdown #${category.category}`)
+
+    categoryElem.on('click', () => {
+      // Generate the search event
+      document.dispatchEvent(
+        new CustomEvent('searchEvent', {
+          detail: {
+            categories: [category.category]
+          }
+        })
+      )
+      // Scroll to the search component
+      document.querySelectorAll('.card.card-search-control')[0].scrollIntoView()
+    })
+    // Show tooltip on hover
+    categoryElem.tooltipsy({
       content: `Show all mentions for category "${category.label}"`,
       className: 'trustyou-ui tooltip top'
     })
+
+    // If there are subcategories apply the same logic on them
     if (category.hasChildren) {
       category.subCategories.forEach(subCategory => {
-        $(`#topic-breakdown #${subCategory.category}`).tooltipsy({
+        const subCategoryElem = $(`#topic-breakdown #${subCategory.category}`)
+
+        subCategoryElem.on('click', () => {
+          // Generate the search event
+          document.dispatchEvent(
+            new CustomEvent('searchEvent', {
+              detail: {
+                categories: [subCategory.category]
+              }
+            })
+          )
+          // Scroll to the search component
+          document.querySelectorAll('.card.card-search-control')[0].scrollIntoView()
+        })
+        // Show tooltip on hover
+        subCategoryElem.tooltipsy({
           content: `Show all mentions for sub-category "${subCategory.label}"`,
           className: 'trustyou-ui tooltip top'
         })

@@ -12,15 +12,35 @@ export default function loadStrengths (companyId, companyName) {
             strengths = integrateJobsData(strengths, jobsData)
             const rendered = Mustache.render(template, { data: strengths })
             document.getElementById('card-strengths').innerHTML = rendered
-            initializeHighlightsTooltips(strengths)
+            enableDrillDown(strengths)
           })
         })
     })
 }
 
-function initializeHighlightsTooltips (strengthsData) {
+function enableDrillDown (strengthsData) {
+  /* The drilldown functionality adds tooltips to score elements and
+   * on click generates a serach event that will show the reviews
+   * that contributed to that particular score
+   * */
   strengthsData.forEach(item => {
-    $(`#top-strengths #${item.category}`).tooltipsy({
+    const elem = $(`#top-strengths #${item.category}`)
+
+    elem.on('click', () => {
+      // Generate the search event
+      document.dispatchEvent(
+        new CustomEvent('searchEvent', {
+          detail: {
+            categories: [item.category],
+            sentiment: 'positive'
+          }
+        })
+      )
+      // Scroll to the search component
+      document.querySelectorAll('.card.card-search-control')[0].scrollIntoView()
+    })
+    // Show tooltip on hover
+    elem.tooltipsy({
       content: `Show all positive mentions for category "${item.label}"`,
       className: 'trustyou-ui tooltip top'
     })
