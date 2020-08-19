@@ -3,7 +3,7 @@
           <div class="card-title">
             <h2>{{title}}<a title="" data-tooltip="top" class="help-trigger"><i class="ty-icon ty-icon-help-o"></i></a>
             </h2>
-            <h3>{{subtitle}}</h3>
+            <h3>{{subtitle}} - Click on a cell to drill-down</h3>
           </div>
         </div>
         <div class="card-body">
@@ -20,7 +20,7 @@
                 {{#data}}
                 <tr>
                     {{#rowData}}
-                        <td class={{highlight}} id={{cellId}}>{{value}}</td>
+                        <td class="{{highlight}} {{#highlight}}drill-down-cta{{/highlight}}" id={{cellId}}>{{value}}</td>
                     {{/rowData}}
                 </tr>
                 {{/data}}

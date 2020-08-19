@@ -24,7 +24,7 @@ function enableDrillDown (weaknessesData) {
    * that contributed to that particular score
    * */
   weaknessesData.forEach(item => {
-    const elem = $(`#top-weaknesses #${item.category}`)
+    const elem = $(`#top-weaknesses #${item.category}`).parent()
     // Scroll to the search component
     elem.on('click', () => {
       // Generate the search event

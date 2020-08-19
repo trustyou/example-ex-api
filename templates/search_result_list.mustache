@@ -1,4 +1,4 @@
-<br/><h2>Found reviews: </h2>
+<h2>Found reviews: </h2>
 {{#reviews}}
 <div class="dialogbox">
     <div class="body">
@@ -13,31 +13,34 @@
 </div>
 {{/reviews}}
 
-{{^reviews}}
+{{^paginationData.hasReviews}}
   <span>That search didn't return any result. Please, change your search criteria and try again.</span>
-{{/reviews}}
-<div class="center"><div class="pagination">
-{{#paginationData.showOnlyNextButton}}
-    <div class="infinite-pagination"><span class="page-number">Page {{paginationData.currentPageLabel}}</span> <a href="#" class="page-link next-page-link" data-navigate-to-page="{{paginationData.nextPage}}">Next</a></div>
-{{/paginationData.showOnlyNextButton}}
+{{/paginationData.hasReviews}}
 
-{{^paginationData.showOnlyNextButton}}
-
-    {{^paginationData.isFirstPage}}
-    <a href="#search-result" class="page-link" data-navigate-to-page="{{paginationData.previousPage}}">&laquo;</a>
-    {{/paginationData.isFirstPage}}
-
-    {{#paginationData.previousPagesList}}
-    <a href="#search-result" class="page-link" data-navigate-to-page="{{pageNumber}}">{{pageLabel}}</a>
-    {{/paginationData.previousPagesList}}
-    <a class="active" href="#search-result">{{paginationData.currentPageLabel}}</a>
-    {{#paginationData.nextPagesList}}
-    <a href="#search-result" class="page-link" data-navigate-to-page="{{pageNumber}}">{{pageLabel}}</a>
-    {{/paginationData.nextPagesList}}
-
-    {{^paginationData.isLastPage}}
-    <a href="#search-result" class="page-link" data-navigate-to-page="{{paginationData.nextPage}}">&raquo;</a>
-    {{/paginationData.isLastPage}}
-    
-{{/paginationData.showOnlyNextButton}}
-</div></div>
+{{#paginationData.hasReviews}}
+  <div class="center"><div class="pagination">
+  {{#paginationData.showOnlyNextButton}}
+      <div class="infinite-pagination"><span class="page-number">Page {{paginationData.currentPageLabel}}</span> <a href="#" class="page-link next-page-link" data-navigate-to-page="{{paginationData.nextPage}}">Next</a></div>
+  {{/paginationData.showOnlyNextButton}}
+  
+  {{^paginationData.showOnlyNextButton}}
+  
+      {{^paginationData.isFirstPage}}
+      <a href="#search-result" class="page-link" data-navigate-to-page="{{paginationData.previousPage}}">&laquo;</a>
+      {{/paginationData.isFirstPage}}
+  
+      {{#paginationData.previousPagesList}}
+      <a href="#search-result" class="page-link" data-navigate-to-page="{{pageNumber}}">{{pageLabel}}</a>
+      {{/paginationData.previousPagesList}}
+      <a class="active" href="#search-result">{{paginationData.currentPageLabel}}</a>
+      {{#paginationData.nextPagesList}}
+      <a href="#search-result" class="page-link" data-navigate-to-page="{{pageNumber}}">{{pageLabel}}</a>
+      {{/paginationData.nextPagesList}}
+  
+      {{^paginationData.isLastPage}}
+      <a href="#search-result" class="page-link" data-navigate-to-page="{{paginationData.nextPage}}">&raquo;</a>
+      {{/paginationData.isLastPage}}
+      
+  {{/paginationData.showOnlyNextButton}}
+  </div></div>
+{{/paginationData.hasReviews}}

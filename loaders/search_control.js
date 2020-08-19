@@ -313,6 +313,7 @@ function getPaginationModelFromResult (result) {
   }
 
   return {
+    hasReviews: result.reviews.length !== 0,
     showOnlyNextButton: result.total_pages === -1,
     currentPageLabel: result.page_number + 1,
     nextPage: result.page_number + 1,
